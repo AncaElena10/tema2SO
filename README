@@ -1,0 +1,74 @@
+Moisa Anca-Elena
+331CA
+
+Tema2 SO - MiniShell
+
+Am lucrat in cmd.c si in main.c(unde am modificat functia start_shell).
+
+shell_cd
+--------
+- schimbare director curent
+- get_word(dir) -> directory - va fi numele directorului unde ma redirectez
+- am folosit functia chdir
+- in cazul in care cd nu primeste argumente, sau directorul e inexistent,
+se afiseaza un mesaj de eroare
+
+parse_simple
+------------
+- aici testez functionalitatea comenzilor interne/externe, variabilelor de 
+mediu
+- pentru comenzile interne am luat o variabila line care va fi cuvantul
+introdus in minishell; daca va coincide cu numele comenzii, atunci apelez
+functiile corespunzatoare
+- pentru variabilele de mediu m-am folosit de 'next_part'
+- acesta pointeaza la urmatoarea parte a unui string, sau returneaza NULL daca
+nu exista alte parti
+- ma asigur ca nu exista valori NULE, si ca variabila mea este definita sub
+forma NUME_VARIABILA=valoare (pentru asta verific daca al doilea membru al
+stringului este '=')
+- pentru comenzile externe am creat un nou proces si am executat comanda
+- de asemenea, am realizat operatiile necesare pentru ca shell-ul sa suporte
+operatori de redirectare
+-pentru testul 18 am facut un mesaj special de eroare in stderr
+
+redirrect_by_type
+-----------------
+- redirectarea se face in functie de tipul operatorului
+- am folosit membrii in, out, error, io_flags ai structurii simple_command_t
+
+do_redirrect
+------------
+- aici, practic, in functie de tipul fisierului(input, output, error) sau in
+functie de parametrul do_append(care verifica daca un operator e modul append)
+am facut deschiderea fisierelor, cu parametrii corespunzatori
+
+do_in_parallel
+--------------
+- am deschis 2 procese in paralel
+- primul executa comanda 1, al doilea comanda 2
+- in default am dat break (parintele nu-si va astepta copilul)
+(initial am gresit, asteptand primul proces inainte sa-l deschid pe al doilea)
+- am evitat codul duplicat prin realizarea a doua functii, choose_pid si
+wait_pid
+
+do_on_pipe
+----------
+- procesul parinte va deschide un proces; acesta la randul lui va deschide alt
+proces; fiecare proces se va ocupa de cate un capat al pipe-ului
+- se va returna exit code-ul comenzii din dreapta
+
+parse_command
+-------------
+- m-am ocupat de fiecare switch in parte respectand TODO-urile
+- pentru operatiile secventiale, apelez functia recursiv
+
+Probleme intampinate:
+- cand introduceam 'cd' fara niciun parametru, avem o eroare de valgrind;
+singura modalitate prin care am reusit sa scap de eroare, a fost sa sterg
+din start_shell orice referire la 'ret'
+(am ajuns la concluzia asta ruland cu valgrind --track-origins=yes)
+(problema era la testul 5)
+
+PS1 - as vrea sa stiu daca solutia la problema e in regula sau daca
+se poate rezolva altfel
+PS2 - una dintre cele mai interesante teme realizate pana acum :D

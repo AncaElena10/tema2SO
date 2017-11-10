@@ -1,0 +1,25 @@
+/**
+ * Operating Sytems 2013-2017 - Assignment 2
+ *
+ * Moisa Anca-Elena, 331CA
+ *
+ */
+
+#ifndef _CMD_H
+#define _CMD_H
+
+#include "parser.h"
+
+#define SHELL_EXIT -100
+
+enum _bool {
+	TRUE = 1,
+	FALSE = 0
+};
+
+/**
+ * Parse and execute a command.
+ */
+int parse_command(command_t *cmd, int level, command_t *father);
+
+#endif /* _CMD_H */
